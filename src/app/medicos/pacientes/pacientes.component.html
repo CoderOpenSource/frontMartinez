@@ -1,0 +1,42 @@
+<!-- Spinner Manual -->
+<div *ngIf="isLoading" class="spinner-container">
+  <div class="spinner"></div>
+</div>
+
+<!-- Contenido Principal -->
+<div *ngIf="!isLoading" class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-4 text-center">Pacientes Atendidos</h1>
+
+  <!-- Mensaje si no hay pacientes -->
+  <div *ngIf="filteredPacientes.length === 0" class="text-center text-gray-600">
+    NO TIENES PACIENTES REGISTRADOS AÚN
+  </div>
+
+  <!-- Tabla de Pacientes -->
+  <table *ngIf="filteredPacientes.length > 0" class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Carnet</th>
+      <th>Fecha de Nacimiento</th>
+      <th>Email</th>
+      <th>Acción</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let paciente of filteredPacientes">
+      <td>{{ paciente.id }}</td>
+      <td>{{ paciente.usuario.nombre }}</td>
+      <td>{{ paciente.usuario.apellido }}</td>
+      <td>{{ paciente.carnet }}</td>
+      <td>{{ paciente.fechaNacimiento }}</td>
+      <td>{{ paciente.usuario.email }}</td>
+      <td>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded" (click)="verHistorial(paciente.id)">Ver Historial</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

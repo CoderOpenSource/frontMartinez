@@ -1,0 +1,39 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-4 text-center">Lista de Procedimientos</h1>
+
+  <!-- Input para seleccionar fecha -->
+  <div class="mb-4 flex justify-between items-center">
+    <input type="date" [(ngModel)]="selectedDate" class="border rounded px-3 py-2" (change)="filtrarProcedimientosPorFecha()" />
+    <button class="bg-blue-500 text-white px-4 py-2 rounded" (click)="crearProcedimiento()">Crear Procedimiento</button>
+  </div>
+
+  <!-- Spinner de carga -->
+  <div *ngIf="loading" class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Tabla de Procedimientos -->
+  <table *ngIf="procedimientos.length > 0" class="min-w-full bg-white shadow-lg rounded-lg">
+    <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Paciente</th>
+      <th>Descripción</th>
+      <th>Observaciones</th>
+      <th>Archivo</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let procedimiento of procedimientos">
+      <td>{{ procedimiento.fecha }}</td>
+      <td>{{ procedimiento.pacienteNombre }} {{ procedimiento.pacienteApellido }}</td>
+      <td>{{ procedimiento.descripcion }}</td>
+      <td>{{ procedimiento.observaciones }}</td>
+      <td>
+        <a *ngIf="procedimiento.archivoUrl" [href]="procedimiento.archivoUrl" target="_blank" class="text-blue-500 underline">Ver archivo</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <p *ngIf="!loading && procedimientos.length === 0" class="text-center text-gray-500">No hay procedimientos disponibles.</p>
+</div>

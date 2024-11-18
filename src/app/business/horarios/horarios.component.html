@@ -1,0 +1,104 @@
+<!-- Spinner Manual -->
+<div *ngIf="isLoading" class="spinner-container">
+  <div class="spinner"></div>
+</div>
+
+<div *ngIf="!isLoading" class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Gestionar Horarios de Médicos</h1>
+
+  <!-- Botón para añadir horario -->
+  <div class="flex justify-center mb-6">
+    <button (click)="openAddHorarioModal()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+      Añadir Horario
+    </button>
+  </div>
+
+  <!-- Horarios por Médico -->
+  <div *ngFor="let medico of medicos" class="mb-8 p-6 bg-white shadow-lg rounded-lg border border-gray-200">
+    <h2 class="text-2xl font-semibold text-gray-700 mb-2">
+      {{ medico.nombre }} {{ medico.apellido }}
+    </h2>
+    <p class="text-gray-600 italic mb-4">
+      Especialidad(es):
+      <span *ngFor="let especialidadId of medico.especialidadesIds; let i = index">
+        {{ getEspecialidadNombre(especialidadId) }}<span *ngIf="i < medico.especialidadesIds.length - 1">, </span>
+      </span>
+    </p>
+
+    <!-- Tabla de horarios -->
+    <table *ngIf="horariosPorMedico[medico.id] && horariosPorMedico[medico.id].length > 0" class="min-w-full bg-white border-collapse shadow-md rounded-lg">
+      <thead>
+      <tr class="bg-gray-800 text-white">
+        <th class="p-4 border">Día</th>
+        <th class="p-4 border">Hora Inicio</th>
+        <th class="p-4 border">Hora Fin</th>
+        <th class="p-4 border">Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let horario of horariosPorMedico[medico.id]" class="hover:bg-gray-100">
+        <td class="p-4 border">{{ horario.dia }}</td>
+        <td class="p-4 border">{{ horario.horaInicio }}</td>
+        <td class="p-4 border">{{ horario.horaFin }}</td>
+        <td class="p-4 border">
+          <input type="checkbox" (change)="toggleDeleteSelection(horario.id)" class="mr-2">
+          <button (click)="editHorario(horario)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+            Editar
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <!-- Mensaje si no hay horarios -->
+    <p *ngIf="!horariosPorMedico[medico.id] || horariosPorMedico[medico.id].length === 0" class="text-gray-600 mt-4">
+      No hay horarios para este médico.
+    </p>
+
+    <!-- Botón para eliminar seleccionados -->
+    <button *ngIf="selectedForDeletion.size > 0" (click)="deleteSelectedHorarios()" class="bg-red-500 text-white px-4 py-2 rounded-lg mt-4 hover:bg-red-600">
+      Eliminar Seleccionados
+    </button>
+  </div>
+
+  <!-- Modal para añadir/editar horario -->
+  <div *ngIf="showModal" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
+      <h2 class="text-2xl font-bold mb-4 text-center">
+        {{ isEditMode ? 'Editar Horario' : 'Añadir Horario' }}
+      </h2>
+
+      <!-- Selección de Médico -->
+      <div class="mb-4">
+        <label class="block font-bold text-gray-700 mb-2">Seleccionar Médico</label>
+        <select [(ngModel)]="selectedMedicoId" class="w-full px-3 py-2 border rounded-lg">
+          <option *ngFor="let medico of medicos" [value]="medico.id">{{ medico.nombre }} {{ medico.apellido }}</option>
+        </select>
+      </div>
+
+      <!-- Día y Horario -->
+      <div class="mb-4">
+        <label class="block font-bold text-gray-700 mb-2">Día</label>
+        <input [(ngModel)]="selectedHorario.dia" placeholder="Día de la semana" class="w-full px-3 py-2 border rounded-lg">
+      </div>
+      <div class="mb-4">
+        <label class="block font-bold text-gray-700 mb-2">Hora Inicio</label>
+        <input [(ngModel)]="selectedHorario.horaInicio" type="time" class="w-full px-3 py-2 border rounded-lg">
+      </div>
+      <div class="mb-4">
+        <label class="block font-bold text-gray-700 mb-2">Hora Fin</label>
+        <input [(ngModel)]="selectedHorario.horaFin" type="time" class="w-full px-3 py-2 border rounded-lg">
+      </div>
+
+      <!-- Botones Guardar y Cancelar -->
+      <div class="flex justify-between mt-4">
+        <button (click)="saveHorario()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+          {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+        </button>
+        <button (click)="closeModal()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

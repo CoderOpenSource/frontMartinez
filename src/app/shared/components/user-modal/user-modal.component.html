@@ -1,0 +1,61 @@
+<div class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" (click)="onClose()">
+  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white" (click)="$event.stopPropagation()">
+    <h3 class="mt-3 text-center text-blue-700 font-bold">{{ isEditMode ? 'Editar Usuario' : 'Añadir Usuario' }}</h3>
+    <div class="mt-4">
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre</label>
+        <input [(ngModel)]="user.nombre" placeholder="Ingrese el nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="apellido">Apellido</label>
+        <input [(ngModel)]="user.apellido" placeholder="Ingrese el apellido" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Correo Electrónico</label>
+        <input [(ngModel)]="user.email" placeholder="Ingrese el correo electrónico" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+      </div>
+      <div class="mb-4" *ngIf="!isEditMode">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="contrasena">Contraseña</label>
+        <div class="relative">
+          <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="user.contrasena" placeholder="Ingrese la contraseña" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5" (click)="togglePasswordVisibility()">
+            <svg class="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path *ngIf="showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12c0-1.657-1.343-3-3-3s-3 1.343-3 3 1.343 3 3 3 3-1.343 3-3z"></path>
+              <path *ngIf="showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+              <path *ngIf="!showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-7 0-10-7-10-7a21.87 21.87 0 015.883-6.181M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path *ngIf="!showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="repeatContrasena">Repetir Contraseña</label>
+        <div class="relative">
+          <input [type]="showRepeatPassword ? 'text' : 'password'" [(ngModel)]="repeatPassword" placeholder="Repita la contraseña" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5" (click)="toggleRepeatPasswordVisibility()">
+            <svg class="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path *ngIf="showRepeatPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12c0-1.657-1.343-3-3-3s-3 1.343-3 3 1.343 3 3 3 3-1.343 3-3z"></path>
+              <path *ngIf="showRepeatPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+              <path *ngIf="!showRepeatPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-7 0-10-7-10-7a21.87 21.87 0 015.883-6.181M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path *ngIf="!showRepeatPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="rol">Rol</label>
+        <select [(ngModel)]="user.rol.id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <option [ngValue]="null" disabled>Seleccione un rol</option>
+          <option *ngFor="let rol of roles" [ngValue]="rol.id">{{ rol.nombre }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="flex items-center justify-between px-4 py-3 space-x-4">
+      <button (click)="onSave()" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md shadow-sm w-1/2">Guardar</button>
+      <button (click)="onClose()" class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md shadow-sm w-1/2">Cerrar</button>
+    </div>
+    <div *ngIf="toastMessage" class="mt-4 p-2 rounded {{ toastClass }}">
+      {{ toastMessage }}
+    </div>
+  </div>
+</div>

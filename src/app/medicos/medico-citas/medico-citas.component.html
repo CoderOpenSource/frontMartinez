@@ -1,0 +1,69 @@
+<!-- Spinner Manual -->
+<div *ngIf="isLoading" class="spinner-container">
+  <div class="spinner"></div>
+</div>
+
+<!-- Contenido Principal -->
+<div *ngIf="!isLoading" class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-4 text-center">Citas del Médico</h1>
+
+  <!-- Mostrar hora actual -->
+  <p class="text-center mb-4 text-gray-600">Hora actual: {{ horaActual | date:'HH:mm:ss' }}</p>
+
+  <!-- Tabla de citas -->
+  <table class="min-w-full bg-white shadow-lg rounded-lg">
+    <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Hora</th>
+      <th>Paciente</th>
+      <th>Especialidad</th>
+      <th>Estado</th>
+      <th>Observaciones</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let cita of citas">
+      <td>{{ cita.fecha }}</td>
+      <td>{{ cita.hora }}</td>
+      <td>{{ cita.pacienteNombre }} {{ cita.pacienteApellido }}</td>
+      <td>{{ cita.especialidadNombre }}</td>
+      <td>{{ cita.estado }}</td>
+      <td>{{ cita.observaciones || 'No atendida' }}</td>
+      <td>
+        <!-- Botón Atendida -->
+        <button *ngIf="cita.estado !== 'atendida' && puedeAceptarCita(cita)"
+                (click)="abrirModal(cita.id)"
+                class="bg-blue-500 text-white px-3 py-1 rounded-lg font-bold">
+          Atendida
+        </button>
+
+        <!-- Botón Cancelar -->
+        <button *ngIf="cita.estado !== 'atendida' && puedeCancelarCita(cita) && cita.estado !== 'cancelada'"
+                (click)="cancelarCita(cita.id)"
+                class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold">
+          Cancelar
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Mensaje si no hay citas -->
+  <div *ngIf="citas.length === 0" class="text-center text-gray-600 mt-4">
+    No hay citas asignadas.
+  </div>
+</div>
+
+<!-- Modal para añadir observaciones -->
+<div *ngIf="showModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+  <div class="bg-white rounded-lg p-6 w-1/3">
+    <h2 class="text-xl font-bold mb-4">Añadir Observaciones</h2>
+    <textarea [(ngModel)]="observaciones" rows="5" class="w-full border border-gray-300 rounded-md p-2 mb-4" placeholder="Escribe tus observaciones aquí..."></textarea>
+    <div class="flex justify-end space-x-4">
+      <button (click)="cerrarModal()" class="bg-gray-500 text-white px-4 py-2 rounded-lg">Cancelar</button>
+      <button (click)="aceptarCitaConObservaciones()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Guardar</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<!-- Spinner Manual -->
+<div *ngIf="isLoading" class="spinner-container">
+  <div class="spinner"></div>
+</div>
+
+<div *ngIf="!isLoading" class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Gestionar Pacientes</h1>
+
+  <!-- Botón para subir archivo Excel -->
+  <div class="flex justify-center mb-6">
+    <input type="file" (change)="onFileSelected($event)" accept=".xlsx, .xls" class="hidden" #fileInput />
+    <button (click)="fileInput.click()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+      Subir Pacientes
+    </button>
+  </div>
+
+  <!-- Tabla de pacientes -->
+  <table class="min-w-full bg-white shadow-lg rounded-lg border-collapse">
+    <thead>
+    <tr class="bg-gray-800 text-white">
+      <th class="p-4 border">ID</th>
+      <th class="p-4 border">Nombre</th>
+      <th class="p-4 border">Apellido</th>
+      <th class="p-4 border">Email</th>
+      <th class="p-4 border">Carnet</th>
+      <th class="p-4 border">Sexo</th>
+      <th class="p-4 border">Edad</th>
+      <th class="p-4 border">Inicio Seguro</th>
+      <th class="p-4 border">Fin Seguro</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let paciente of pacientes" class="hover:bg-gray-100">
+      <td class="p-4 border">{{ paciente.id }}</td>
+      <td class="p-4 border">{{ paciente.usuario.nombre }}</td>
+      <td class="p-4 border">{{ paciente.usuario.apellido }}</td>
+      <td class="p-4 border">{{ paciente.usuario.email }}</td>
+      <td class="p-4 border">{{ paciente.carnet }}</td>
+      <td class="p-4 border">{{ paciente.sexo }}</td>
+      <td class="p-4 border">{{ paciente.edad }}</td>
+      <td class="p-4 border">{{ paciente.fechaInicioSeguro }}</td>
+      <td class="p-4 border">{{ paciente.fechaFinSeguro }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>

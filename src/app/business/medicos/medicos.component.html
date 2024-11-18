@@ -1,0 +1,131 @@
+<!-- Spinner Manual -->
+<div *ngIf="isLoading" class="spinner-container">
+  <div class="spinner"></div>
+</div>
+
+<div *ngIf="!isLoading" class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Gestionar Médicos</h1>
+
+  <!-- Botón para añadir médico -->
+  <div class="flex justify-center mb-6">
+    <button (click)="addMedico()" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
+      Añadir Médico
+    </button>
+  </div>
+
+  <!-- Tabla de médicos -->
+  <table class="min-w-full bg-white shadow-lg rounded-lg border-collapse">
+    <thead>
+    <tr class="bg-gray-800 text-white">
+      <th class="p-4 border">ID</th>
+      <th class="p-4 border">Nombre y Apellido</th>
+      <th class="p-4 border">CI</th>
+      <th class="p-4 border">Email</th>
+      <th class="p-4 border">Teléfono</th>
+      <th class="p-4 border">Licencia</th>
+      <th class="p-4 border">Disponibilidad</th>
+      <th class="p-4 border">Especialidades</th>
+      <th class="p-4 border">Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let medico of medicos" class="hover:bg-gray-100">
+      <td class="p-4 border">{{ medico.id }}</td>
+      <td class="p-4 border">{{ medico.nombre }} {{ medico.apellido }}</td>
+      <td class="p-4 border">{{ medico.ci }}</td>
+      <td class="p-4 border">{{ medico.email }}</td>
+      <td class="p-4 border">{{ medico.telefonoConsultorio }}</td>
+      <td class="p-4 border">{{ medico.numeroLicencia }}</td>
+      <td class="p-4 border">{{ medico.disponibilidad ? 'Activo' : 'Inactivo' }}</td>
+      <td class="p-4 border">
+          <span *ngFor="let especialidadId of medico.especialidadesIds; let i = index">
+            {{ getEspecialidadNombre(especialidadId) }}<span *ngIf="i < medico.especialidadesIds.length - 1">, </span>
+          </span>
+      </td>
+      <td class="p-4 border">
+        <button (click)="editMedico(medico.id)" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 mr-2">
+          Editar
+        </button>
+        <button (click)="deleteMedico(medico.id)" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+          Eliminar
+        </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal para agregar/editar médico -->
+  <div *ngIf="showModal" class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
+      <h2 class="text-2xl font-bold mb-4 text-center">
+        {{ isEditMode ? 'Editar Médico' : 'Añadir Médico' }}
+      </h2>
+
+      <!-- Fila para Nombre y Apellido -->
+      <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Nombre</label>
+          <input [(ngModel)]="selectedMedico.nombre" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Apellido</label>
+          <input [(ngModel)]="selectedMedico.apellido" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+      </div>
+
+      <!-- Fila para CI y Teléfono -->
+      <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">CI</label>
+          <input [(ngModel)]="selectedMedico.ci" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Teléfono</label>
+          <input [(ngModel)]="selectedMedico.telefonoConsultorio" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+      </div>
+
+      <!-- Fila para Email y Número de Licencia -->
+      <div class="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Email</label>
+          <input [(ngModel)]="selectedMedico.email" type="email" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+        <div>
+          <label class="block font-bold text-gray-700 mb-1">Número de Licencia</label>
+          <input [(ngModel)]="selectedMedico.numeroLicencia" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+        </div>
+      </div>
+
+      <!-- Select para Disponibilidad -->
+      <div class="mb-4">
+        <label class="block font-bold text-gray-700 mb-1">Disponibilidad</label>
+        <select [(ngModel)]="selectedMedico.disponibilidad" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+          <option [ngValue]="true">Activo</option>
+          <option [ngValue]="false">Inactivo</option>
+        </select>
+      </div>
+
+      <!-- Especialidades -->
+      <div class="mb-4">
+        <label class="block font-bold text-gray-700 mb-1">Especialidades</label>
+        <div class="grid grid-cols-2 gap-4">
+          <div *ngFor="let especialidad of especialidades" class="flex items-center">
+            <input type="checkbox" [value]="especialidad.id" (change)="toggleEspecialidadSelection(especialidad.id)" [checked]="especialidadesIds.includes(especialidad.id)">
+            <span class="ml-2">{{ especialidad.nombre }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones Guardar y Cancelar -->
+      <div class="flex justify-between mt-4">
+        <button (click)="saveMedico()" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+          {{ isEditMode ? 'Actualizar' : 'Guardar' }}
+        </button>
+        <button (click)="closeModal()" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

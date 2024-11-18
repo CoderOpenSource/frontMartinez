@@ -1,0 +1,48 @@
+<div class="flex flex-col items-center justify-center h-screen bg-green-300">
+  <div class="text-center">
+    <h1 class="text-4xl font-bold text-green-600">Gestión de Historia Clínica</h1>
+    <p class="mt-2 text-gray-600">Administra las historias clínicas de los pacientes de manera rápida y segura.</p>
+  </div>
+  <div class="mt-6 w-full max-w-md">
+    <form class="bg-green-200 shadow-md rounded px-8 pt-6 pb-8 mb-4" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <div class="mb-4 text-center">
+        <img src="https://res.cloudinary.com/dkpuiyovk/image/upload/v1731598325/pngwing.com_33_fzyg18.png" alt="Logo" class="w-40 h-40 mx-auto rounded-full">
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
+          Correo electrónico
+        </label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" placeholder="doctor@clinic.com" required [(ngModel)]="email" name="email">
+      </div>
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+          Contraseña
+        </label>
+        <div class="relative">
+          <input [type]="showPassword ? 'text' : 'password'" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" placeholder="********" required [(ngModel)]="password" name="password">
+          <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-blue-600" (click)="togglePasswordVisibility()">
+            <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path *ngIf="!showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12c0-1.657-1.343-3-3-3s-3 1.343-3 3 1.343 3 3 3 3-1.343 3-3z"></path>
+              <path *ngIf="!showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"></path>
+              <path *ngIf="showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-7 0-10-7-10-7a21.87 21.87 0 015.883-6.181M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              <path *ngIf="showPassword" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <label class="block text-gray-500 font-bold">
+          <input class="mr-2 leading-tight" type="checkbox">
+          <span class="text-sm">Recordarme</span>
+        </label>
+        <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+          Ingresar
+        </button>
+      </div>
+      <div *ngIf="error" class="text-red-500 text-sm mt-4">{{ error }}</div>
+    </form>
+  </div>
+  <div *ngIf="toastMessage" class="fixed bottom-0 right-0 m-6 p-3 rounded shadow-lg" [ngClass]="toastClass">
+    {{ toastMessage }}
+  </div>
+</div>

@@ -1,0 +1,52 @@
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-4 text-center">Mis Análisis</h1>
+
+  <!-- Spinner de carga -->
+  <div *ngIf="isLoading" class="spinner-container">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Botón para crear análisis -->
+  <button
+    *ngIf="pacientes.length > 0"
+    (click)="crearAnalisis()"
+    class="bg-green-500 text-white px-4 py-2 rounded-lg mb-4">
+    Crear Análisis
+  </button>
+
+  <!-- Mensaje si no hay pacientes -->
+  <div *ngIf="pacientes.length === 0 && !isLoading" class="text-center text-red-500 mb-4">
+    No hay pacientes disponibles para crear análisis.
+  </div>
+
+  <!-- Tabla para mostrar análisis -->
+  <table *ngIf="analisisList.length > 0" class="min-w-full bg-white shadow-lg rounded-lg">
+    <thead>
+    <tr style="background-color: #343a40; color: white;">
+      <th class="px-4 py-2">Fecha</th>
+      <th class="px-4 py-2">Paciente</th>
+      <th class="px-4 py-2">Tipo de Análisis</th>
+      <th class="px-4 py-2">Resultado</th>
+      <th class="px-4 py-2">Médico</th>
+      <th class="px-4 py-2">Archivo</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let analisis of analisisList">
+      <td class="border px-4 py-2">{{ analisis.fechaRealizacion }}</td>
+      <td class="border px-4 py-2">{{ analisis.pacienteNombre }} {{ analisis.pacienteApellido }}</td>
+      <td class="border px-4 py-2">{{ analisis.tipoAnalisis }}</td>
+      <td class="border px-4 py-2">{{ analisis.resultado }}</td>
+      <td class="border px-4 py-2">{{ analisis.medicoNombre }} {{ analisis.medicoApellido }}</td>
+      <td class="border px-4 py-2">
+        <a [href]="analisis.archivoUrl" target="_blank" class="text-blue-500 underline">Ver archivo</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Mensaje si no hay análisis -->
+  <div *ngIf="analisisList.length === 0 && !isLoading" class="text-center text-gray-500">
+    No hay análisis disponibles.
+  </div>
+</div>
